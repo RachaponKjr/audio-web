@@ -53,22 +53,8 @@ const HomePage = () => {
     }
   }, [isOnline, isPlaying]);
 
-  // Effect: จัดการ Play/Pause
-  useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.error("Playback failed:", error);
-            setIsPlaying(false);
-          });
-        }
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [isPlaying]);
+  // --- ลบ useEffect เดิมที่ใช้สั่ง play() ออก ---
+  // การสั่ง play ใน useEffect มักจะโดน Mobile Browser บล็อก เพราะถือว่าไม่ใช่ User Interaction โดยตรง
 
   // Effect: จัดการ Volume
   useEffect(() => {
@@ -77,9 +63,28 @@ const HomePage = () => {
     }
   }, [volume, isMuted]);
 
-  const togglePlay = () => {
-    if (!isOnline) return; // ถ้าไม่ออนไลน์ ห้ามทำงาน
-    setIsPlaying(!isPlaying);
+  const togglePlay = async () => {
+    if (!isOnline || !audioRef.current) return; // ถ้าไม่ออนไลน์ ห้ามทำงาน
+
+    if (isPlaying) {
+      // ถ้ากำลังเล่นอยู่ ให้หยุด
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      // ถ้าหยุดอยู่ ให้เล่น (เรียก play() ทันทีใน Event Handler นี้)
+      try {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.error("Playback failed:", error);
+        setIsPlaying(false);
+        // เพิ่ม Alert เพื่อ debug บนมือถือถ้าจำเป็น
+        // alert("Cannot play audio: " + error);
+      }
+    }
   };
 
   const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,6 +110,7 @@ const HomePage = () => {
         src={STREAM_URL}
         preload="none"
         crossOrigin="anonymous"
+        playsInline // สำคัญสำหรับ Mobile บางรุ่น
       />
 
       {/* --- Main Slider --- */}
