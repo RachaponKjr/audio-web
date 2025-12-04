@@ -14,7 +14,7 @@ export const useStreamStatus = (): StreamData => {
   const checkStatus = useCallback(async () => {
     try {
       // หมายเหตุ: ถ้าเว็บหลักเป็น HTTPS แต่ Icecast เป็น HTTP อาจจะติด Mixed Content
-      const res = await fetch("http://3.209.12.238:8000/status-json.xsl");
+      const res = await fetch("http://3.236.202.167:8000/status-json.xsl");
       const data = await res.json();
 
       // Icecast บางที return source เป็น array หรือ object ต้องเช็คให้ดี
