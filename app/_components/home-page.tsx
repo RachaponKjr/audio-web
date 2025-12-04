@@ -27,7 +27,7 @@ const swiperParams = {
   },
 };
 
-const STREAM_URL = "http://3.236.202.167:8000/stream";
+const STREAM_URL = "http://103.91.204.179:8000/stream";
 
 const HomePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
