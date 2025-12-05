@@ -147,7 +147,7 @@ const HomePage = () => {
         {/* แผ่นเสียง (Vinyl) */}
         <div
           className={`
-            absolute -top-12 right-6 md:right-10 w-32 h-32 rounded-full 
+            absolute md:-top-12 -top-8 right-6 md:right-10 md:w-32 md:h-32 w-28 h-28 rounded-full 
             border-4 shadow-2xl z-40 overflow-hidden bg-black
             transition-all duration-700 ease-in-out
             ${
