@@ -18,11 +18,11 @@ export default function Navbar() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-xl text-gray-800 tracking-tight group-hover:text-red-600 transition-colors">
+            <span className="font-bold text-base md:text-xl text-gray-800 tracking-tight group-hover:text-red-600 transition-colors">
               สถานี ศรสินเรดิโอ
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+              <span className="text-xs md:text-sm font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
                 FM 101.25 MHz
               </span>
             </div>

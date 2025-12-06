@@ -5,36 +5,48 @@ type StreamStatus = "online" | "offline" | "loading";
 interface StreamData {
   status: StreamStatus;
   listeners: number;
+  name_audio: string;
+  description_audio: string;
 }
 
 export const useStreamStatus = (): StreamData => {
   const [status, setStatus] = useState<StreamStatus>("loading");
   const [listeners, setListeners] = useState<number>(0);
 
+  // 1. เพิ่ม State สำหรับเก็บชื่อและรายละเอียด
+  const [nameAudio, setNameAudio] = useState<string>("");
+  const [descAudio, setDescAudio] = useState<string>("");
+
   const checkStatus = useCallback(async () => {
     try {
-      // หมายเหตุ: ถ้าเว็บหลักเป็น HTTPS แต่ Icecast เป็น HTTP อาจจะติด Mixed Content
-      const res = await fetch("http://103.91.204.179:8000/status-json.xsl");
+      const res = await fetch("https://สถานีวิทยุศรสินเรดิโอ.com/radio-status");
       const data = await res.json();
 
-      // Icecast บางที return source เป็น array หรือ object ต้องเช็คให้ดี
+      // Icecast JSON structure: data.icestats.source
       const source = data.icestats?.source;
 
-      // ถ้ามี Source แปลว่า Online
       if (source) {
         // กรณีมีหลาย Mountpoint ให้เอาตัวแรก หรือถ้ามีตัวเดียวก็ใช้เลย
         const currentSource = Array.isArray(source) ? source[0] : source;
 
         setStatus("online");
         setListeners(currentSource.listeners || 0);
+
+        // 2. อัปเดตข้อมูลลง State (ใช้ ?. เพื่อกัน error ถ้าค่าไม่มี)
+        setNameAudio(currentSource.server_name || "Unknown Station");
+        setDescAudio(currentSource.server_description || "");
       } else {
         setStatus("offline");
-        setListeners(0); // Reset listeners if offline
+        setListeners(0);
+        setNameAudio("");
+        setDescAudio("");
       }
     } catch (error) {
       console.error("Stream check failed:", error);
       setStatus("offline");
-      setListeners(0); // Reset listeners on error
+      setListeners(0);
+      setNameAudio("");
+      setDescAudio("");
     }
   }, []);
 
@@ -42,10 +54,15 @@ export const useStreamStatus = (): StreamData => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void checkStatus();
 
-    // ตั้งเวลาให้เช็คสถานะใหม่ทุกๆ 10 วินาที
     const interval = setInterval(checkStatus, 10000);
     return () => clearInterval(interval);
   }, [checkStatus]);
 
-  return { status, listeners };
+  // 3. ส่งค่าจาก State ออกไป
+  return {
+    status,
+    listeners,
+    name_audio: nameAudio,
+    description_audio: descAudio,
+  };
 };

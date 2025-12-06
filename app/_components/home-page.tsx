@@ -27,7 +27,7 @@ const swiperParams = {
   },
 };
 
-const STREAM_URL = "http://103.91.204.179:8000/stream";
+const STREAM_URL = "https://สถานีวิทยุศรสินเรดิโอ.com/radio";
 
 const HomePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -35,7 +35,7 @@ const HomePage = () => {
   const [isMuted, setIsMuted] = useState(false);
 
   // ดึงสถานะสตรีม
-  const { status } = useStreamStatus();
+  const { status, name_audio, description_audio } = useStreamStatus();
 
   // เช็คว่าเป็น Online หรือไม่
   const isOnline = status === "online";
@@ -204,7 +204,7 @@ const HomePage = () => {
 
           <div className="flex items-center justify-between h-full px-4 md:px-8 pr-32 md:pr-44">
             {/* Left: Play Controls */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 md:gap-6">
               <button
                 onClick={togglePlay}
                 disabled={!isOnline}
@@ -236,7 +236,7 @@ const HomePage = () => {
               <div className="flex flex-col overflow-hidden">
                 <div className="flex items-center gap-2 mb-1">
                   {isOnline ? (
-                    <div className="flex items-center gap-1.5 bg-red-500/20 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold text-red-100 shadow-[0_0_10px_rgba(239,68,68,0.4)]">
+                    <div className="flex text-nowrap items-center gap-1.5 bg-red-500/20 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold text-red-100 shadow-[0_0_10px_rgba(239,68,68,0.4)]">
                       <span className="relative flex h-1.5 w-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
@@ -244,7 +244,7 @@ const HomePage = () => {
                       ON AIR
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 bg-gray-500/20 border border-gray-500/30 px-2 py-0.5 rounded text-[10px] font-bold text-gray-400">
+                    <div className="flex text-nowrap items-center gap-1.5 bg-gray-500/20 border border-gray-500/30 px-2 py-0.5 rounded text-[10px] font-bold text-gray-400">
                       <span className="h-1.5 w-1.5 rounded-full bg-gray-500"></span>
                       OFF AIR
                     </div>
@@ -258,10 +258,10 @@ const HomePage = () => {
                     isOnline ? "text-white" : "text-gray-400"
                   }`}
                 >
-                  {isOnline ? "รายการข่าวเช้า" : "สถานีปิดให้บริการ"}
+                  {isOnline ? name_audio : "สถานีปิดให้บริการ"}
                 </h3>
                 <p className="text-white/70 text-sm truncate">
-                  {isOnline ? "DJ. สมชาย ใจดี" : "เจอกันใหม่พรุ่งนี้"}
+                  {isOnline ? description_audio : "เจอกันใหม่พรุ่งนี้"}
                 </p>
               </div>
             </div>

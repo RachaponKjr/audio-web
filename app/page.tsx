@@ -1,6 +1,4 @@
-import Image from "next/image";
 import HomePage from "./_components/home-page";
-import StatusStream from "./_components/status-stream";
 import Navbar from "@/components/layout/navber";
 
 export default function Home() {
